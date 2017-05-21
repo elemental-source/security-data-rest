@@ -16,12 +16,15 @@
 
 package com.elementalsource.example.securitydatarest.security.restassured;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.elementalsource.example.securitydatarest.model.Employee;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.hamcrest.CoreMatchers;
@@ -135,7 +138,7 @@ public class UrlLevelSecurityTests {
     }
 
     @Test
-    public void allowsPostRequestForAdmin() throws Exception {
+    public void allowsPostRequestForAdminLikeModel() throws Exception {
         final Employee employee =
 
         given().
@@ -152,6 +155,36 @@ public class UrlLevelSecurityTests {
         assertThat(employee.getFirstName(), CoreMatchers.is("Saruman"));
         assertThat(employee.getLastName(), CoreMatchers.is("the White"));
         assertThat(employee.getTitle(), CoreMatchers.is("Wizard"));
+    }
+
+    @Test
+    public void allowsPostRequestForAdminLikeInlineJson() throws Exception {
+        given().
+            accept(MediaTypes.HAL_JSON_VALUE).
+            contentType(MediaType.APPLICATION_JSON_VALUE).
+            auth().with(httpBasic("ollie", "gierke")).
+            body(PAYLOAD).
+        when().
+            post("/employees").
+        then().
+            statusCode(is(HttpStatus.CREATED.value())).
+            body("firstName", equalTo("Saruman")).
+            body("lastName", equalTo("the White")).
+            body("title", equalTo("Wizard"));
+    }
+
+    @Test
+    public void allowsPostRequestForAdminLikeFileJson() throws Exception {
+        given().
+            accept(MediaTypes.HAL_JSON_VALUE).
+            contentType(MediaType.APPLICATION_JSON_VALUE).
+            auth().with(httpBasic("ollie", "gierke")).
+            body(PAYLOAD).
+        when().
+            post("/employees").
+        then().
+            statusCode(is(HttpStatus.CREATED.value())).
+            body(matchesJsonSchemaInClasspath("employee.json"));
     }
 
     @Test
