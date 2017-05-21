@@ -1,4 +1,4 @@
-# Spring Data Rest with security and multiple tests approaches
+# Spring Data Rest with security and multiple integration tests approaches
 
 ### Tests approaches
 - Spring MVC test framework
