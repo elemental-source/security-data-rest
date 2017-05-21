@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.elementalsource.example.securitydatarest.security.springmvctestframework;
+package com.elementalsource.example.securitydatarest.security;
 
 import static org.junit.Assert.fail;
 
@@ -38,7 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MethodLevelSecurityTests {
+public class ContextMethodLevelSecurityTests {
 
     @Autowired
     private ItemRepository itemRepository;
