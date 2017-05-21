@@ -71,20 +71,20 @@ public class UrlLevelSecurityTests {
     @Test
     public void allowsAccessToRootResource() throws Exception {
 
-        mvc.perform(get("/").//
-            accept(MediaTypes.HAL_JSON)).//
-            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).//
-            andExpect(status().isOk()).//
+        mvc.perform(get("/").
+            accept(MediaTypes.HAL_JSON)).
+            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).
+            andExpect(status().isOk()).
             andDo(print());
     }
 
     @Test
     public void rejectsPostAccessToCollectionResource() throws Exception {
 
-        mvc.perform(post("/employees").//
-            content(PAYLOAD).//
-            accept(MediaTypes.HAL_JSON)).//
-            andExpect(status().isUnauthorized()).//
+        mvc.perform(post("/employees").
+            content(PAYLOAD).
+            accept(MediaTypes.HAL_JSON)).
+            andExpect(status().isUnauthorized()).
             andDo(print());
     }
 
@@ -95,10 +95,10 @@ public class UrlLevelSecurityTests {
         headers.add(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
         headers.add(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("greg:turnquist").getBytes())));
 
-        mvc.perform(get("/employees").//
-            headers(headers)).//
-            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).//
-            andExpect(status().isOk()).//
+        mvc.perform(get("/employees").
+            headers(headers)).
+            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).
+            andExpect(status().isOk()).
             andDo(print());
     }
 
@@ -109,9 +109,9 @@ public class UrlLevelSecurityTests {
         headers.add(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
         headers.add(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("greg:turnquist").getBytes())));
 
-        mvc.perform(post("/employees").//
-            headers(headers)).//
-            andExpect(status().isForbidden()).//
+        mvc.perform(post("/employees").
+            headers(headers)).
+            andExpect(status().isForbidden()).
             andDo(print());
     }
 
@@ -122,10 +122,10 @@ public class UrlLevelSecurityTests {
         headers.add(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
         headers.add(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("ollie:gierke").getBytes())));
 
-        mvc.perform(get("/employees").//
-            headers(headers)).//
-            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).//
-            andExpect(status().isOk()).//
+        mvc.perform(get("/employees").
+            headers(headers)).
+            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).
+            andExpect(status().isOk()).
             andDo(print());
     }
 
@@ -139,17 +139,16 @@ public class UrlLevelSecurityTests {
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         String location = mvc
-            .perform(post("/employees").//
-                content(PAYLOAD).//
-                headers(headers))
-            .//
-            andExpect(status().isCreated()).//
-            andDo(print()).//
-            andReturn().getResponse().getHeader(HttpHeaders.LOCATION);
+            .perform(post("/employees").
+                content(PAYLOAD).
+                headers(headers)).
+                andExpect(status().isCreated()).
+                andDo(print()).
+                andReturn().getResponse().getHeader(HttpHeaders.LOCATION);
 
         ObjectMapper mapper = new ObjectMapper();
 
-        String content = mvc.perform(get(location)).//
+        String content = mvc.perform(get(location)).
             andReturn().getResponse().getContentAsString();
         Employee employee = mapper.readValue(content, Employee.class);
 
