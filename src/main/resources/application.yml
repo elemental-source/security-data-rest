@@ -1,3 +1,5 @@
-/#spring.data.rest:
+spring.data.rest:
   returnBodyOnCreate: true
   returnBodyOnUpdate: true
+
+logging.level: INFO

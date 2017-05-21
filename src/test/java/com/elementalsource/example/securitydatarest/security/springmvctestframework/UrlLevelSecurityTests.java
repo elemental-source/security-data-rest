@@ -49,7 +49,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RestUrlLevelSecurityTests {
+public class UrlLevelSecurityTests {
 
     private static final String PAYLOAD = "{\"firstName\": \"Saruman\", \"lastName\": \"the White\", " + "\"title\": \"Wizard\"}";
 
@@ -89,7 +89,7 @@ public class RestUrlLevelSecurityTests {
     }
 
     @Test
-    public void allowsGetRequestsButRejectsPostForUser() throws Exception {
+    public void allowsGetRequestsForUser() throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
@@ -100,10 +100,32 @@ public class RestUrlLevelSecurityTests {
             andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).//
             andExpect(status().isOk()).//
             andDo(print());
+    }
+
+    @Test
+    public void rejectsPostForUser() throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
+        headers.add(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("greg:turnquist").getBytes())));
 
         mvc.perform(post("/employees").//
             headers(headers)).//
             andExpect(status().isForbidden()).//
+            andDo(print());
+    }
+
+    @Test
+    public void allowsGetRequestsForAdmin() throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
+        headers.add(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("ollie:gierke").getBytes())));
+
+        mvc.perform(get("/employees").//
+            headers(headers)).//
+            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).//
+            andExpect(status().isOk()).//
             andDo(print());
     }
 
@@ -113,12 +135,6 @@ public class RestUrlLevelSecurityTests {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
         headers.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("ollie:gierke").getBytes())));
-
-        mvc.perform(get("/employees").//
-            headers(headers)).//
-            andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).//
-            andExpect(status().isOk()).//
-            andDo(print());
 
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
