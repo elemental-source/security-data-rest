@@ -19,7 +19,6 @@ import static org.junit.Assert.fail;
 
 import com.elementalsource.example.securitydatarest.model.Item;
 import com.elementalsource.example.securitydatarest.repository.ItemRepository;
-import com.elementalsource.example.securitydatarest.security.SecurityUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

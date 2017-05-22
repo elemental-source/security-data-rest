@@ -2,4 +2,4 @@ spring.data.rest:
   returnBodyOnCreate: true
   returnBodyOnUpdate: true
 
-logging.level: INFO
+logging.level: WARNING

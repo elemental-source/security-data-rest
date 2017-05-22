@@ -17,6 +17,10 @@ apply plugin: 'org.springframework.boot'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+project.ext {
+    cucumberVersion = '1.2.5'
+}
+
 repositories {
     mavenCentral()
 }
@@ -38,4 +42,8 @@ dependencies {
     testCompile("io.rest-assured:rest-assured:3.0.3")
     testCompile("io.rest-assured:json-schema-validator:3.0.3")
     testCompile("io.rest-assured:spring-mock-mvc:3.0.3")
+
+    testCompile("info.cukes:cucumber-java8:" + cucumberVersion)
+    testCompile("info.cukes:cucumber-junit:" + cucumberVersion)
+    testCompile("info.cukes:cucumber-spring:" + cucumberVersion)
 }
